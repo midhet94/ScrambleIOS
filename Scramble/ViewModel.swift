@@ -14,10 +14,14 @@ struct WordModel: Decodable {
 
 class ViewModel: ObservableObject {
     @Published var words: [String] = []
+    @Published var originalWord: [String] = []
+    @Published var jumbledWord: [String] = []
     
     init() {
         let dataModel: WordModel = loadLocalJSON(filename: "words")
         self.words = dataModel.data
+        self.originalWord = getWord()
+        self.jumbledWord = jumbleIt(word: originalWord)
     }
     
     func loadLocalJSON<T: Decodable>(filename: String) -> T {
