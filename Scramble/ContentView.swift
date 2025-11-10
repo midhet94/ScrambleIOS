@@ -8,12 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
+    let viewModel = ViewModel()
+    
     var body: some View {
+        let originalWord = viewModel.getWord()
+        let jumbledWord = viewModel.jumbleIt(word: originalWord)
+        
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            HStack {
+                ForEach(jumbledWord, id: \.self) {character in
+                    Text(character.uppercased())
+                        .bold()
+                        .padding()
+                        .background(RoundedRectangle(cornerSize: .zero).foregroundColor(.gray))
+                }
+            }
         }
         .padding()
     }

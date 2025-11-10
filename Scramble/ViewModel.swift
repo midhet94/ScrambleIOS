@@ -8,11 +8,16 @@
 import Foundation
 import Combine
 
+struct WordModel: Decodable {
+    var data: [String]
+}
+
 class ViewModel: ObservableObject {
     @Published var words: [String] = []
     
     init() {
-        self.words = loadLocalJSON(filename: "words")
+        let dataModel: WordModel = loadLocalJSON(filename: "words")
+        self.words = dataModel.data
     }
     
     func loadLocalJSON<T: Decodable>(filename: String) -> T {
@@ -31,5 +36,16 @@ class ViewModel: ObservableObject {
         } catch {
             fatalError("Couldn't parse \(filename).json as \(T.self):\n\(error)")
         }
+    }
+    
+    func getWord() -> [String] {
+        if let randomWord = words.randomElement() {
+            return randomWord.map { String($0) }
+        }
+        return getWord()
+    }
+    
+    func jumbleIt(word: [String]) -> [String] {
+        word.shuffled()
     }
 }
