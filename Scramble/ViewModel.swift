@@ -15,7 +15,7 @@ struct WordModel: Decodable {
 class ViewModel: ObservableObject {
     @Published var words: [String] = []
     @Published var originalWord: [String] = []
-    @Published var jumbledWord: [String] = []
+    @Published var jumbledWord: [LetterItem] = []
     
     init() {
         let dataModel: WordModel = loadLocalJSON(filename: "words")
@@ -49,7 +49,14 @@ class ViewModel: ObservableObject {
         return getWord()
     }
     
-    func jumbleIt(word: [String]) -> [String] {
+    func jumbleIt(word: [String]) -> [LetterItem] {
         word.shuffled()
+            .enumerated()
+            .map { LetterItem(id: $0.offset, char: String($0.element)) }
+    }
+    
+    func resetGame() {
+        self.originalWord = getWord()
+        self.jumbledWord = jumbleIt(word: originalWord)
     }
 }
